@@ -1,0 +1,15 @@
+dist: focal
+language: minimal
+services:
+- docker
+before_install:
+- pip install -U pip
+- curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+- unzip awscliv2.zip &>/dev/null
+- sudo ./aws/install
+- aws --version
+- export PATH=$PATH:$HOME/.local/bin
+- docker build -t ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/itaig:latest .
+after_success:
+- aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+- docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/itaig:latest
