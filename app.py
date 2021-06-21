@@ -72,8 +72,8 @@ def send_email(bucket_name, file_name, file_type, url):
 def lambda_handler(event, context):
     print(json.dumps(event,indent=4,default=str))
     info = event['Records'][0]['s3']
-    file_name = info.get('object', {}).get('key')
-    bucket_name = info.get('bucket', {}).get('name')
+    file_name = info['object']['key']
+    bucket_name = info['bucket']['name']
     
     s3_client = boto3.client('s3')
     location = s3_client.get_bucket_location(Bucket=bucket_name)['LocationConstraint']
