@@ -18,6 +18,6 @@ before_install:
 after_success:
 - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 - docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}:latest
-- ecr_image_sha=$(aws ecr list-images --repository-name itaig | jq -r '.imageIds[] | select(.imageTag=="latest") .imageDigest')
-- ecr_image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/itaig@${ecr_image_sha}"
-- aws lambda update-function-code --function-name ${lambda_name} --image-uri ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}@${ecr_image_sha}
+- ecr_image_sha=$(aws ecr list-images --repository-name ${ecr_repo_name} | jq -r '.imageIds[] | select(.imageTag=="latest") .imageDigest')
+- ecr_image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}@${ecr_image_sha}"
+- aws lambda update-function-code --function-name ${lambda_name} --image-uri ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}@${ecr_image_sha} &>/dev/null
