@@ -17,8 +17,8 @@ before_install:
 - export PATH=$PATH:$HOME/.local/bin
 - docker build -t ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}:${TRAVIS_BRANCH}-${TRAVIS_BUILD_NUMBER} .
 after_success:
-- aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+- aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com &>/dev/null
 - docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}:${TRAVIS_BRANCH}-${TRAVIS_BUILD_NUMBER}
 - ecr_image_sha=$(aws ecr list-images --repository-name ${ecr_repo_name} | jq -r --arg travis_search "$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER" '.imageIds[] | select(.imageTag == $travis_search) | .imageDigest') 
 - ecr_image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}@${ecr_image_sha}"
-- aws lambda update-function-code --function-name ${lambda_name} --image-uri ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}@${ecr_image_sha}
+- aws lambda update-function-code --function-name ${lambda_name} --image-uri ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}@${ecr_image_sha} &>/dev/null
