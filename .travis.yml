@@ -15,7 +15,7 @@ before_install:
 - sudo ./aws/install
 - aws --version
 - export PATH=$PATH:$HOME/.local/bin
-- docker build -t ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}:latest .
+- docker build -t ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}:${TRAVIS_BRANCH}-${TRAVIS_BUILD_NUMBER} .
 after_success:
 - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 - docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}:${TRAVIS_BRANCH}-${TRAVID_BUILD_NUMBER}
