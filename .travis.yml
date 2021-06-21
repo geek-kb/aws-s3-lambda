@@ -21,4 +21,4 @@ after_success:
 - docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}:${TRAVIS_BRANCH}-${TRAVIS_BUILD_NUMBER}
 - ecr_image_sha=$(aws ecr list-images --repository-name ${ecr_repo_name} | jq --arg travis_branch ${TRAVIS_BRANCH} --arg travis_build_number ${TRAVIS_BUILD_NUMBER} -r '.imageIds[] | select(.imageTag=="$travis_branch-$travis_build_number") .imageDigest')
 - ecr_image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}@${ecr_image_sha}"
-- aws lambda update-function-code --function-name ${lambda_name} --image-uri ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}@${ecr_image_sha} &>/dev/null
+- aws lambda update-function-code --function-name ${lambda_name} --image-uri ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ecr_repo_name}@${ecr_image_sha}
