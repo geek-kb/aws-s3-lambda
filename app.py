@@ -80,6 +80,6 @@ def lambda_handler(event, context):
     url = "https://s3-{}.amazonaws.com/{}/{}".format(location, bucket_name, file_name)
     response = s3_client.head_object(Bucket=bucket_name, Key=file_name)
     file_type = response['ContentType'].replace('application/', '')
-    print('info: {}, info-object-key: {}, info-bucket-name: {}'.format(info, info['object']['key'], info['bucket']['name']))
+    print('info: {}, file_name: {}, bucket_name: {}'.format(info, file_name, bucket_name))
     send_email(bucket_name, file_name, file_type, url)
 
